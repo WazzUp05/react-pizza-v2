@@ -1,4 +1,4 @@
-# Тестовый проект по реакту React Pizza v2
+# Тестовый проект по реакту React Pizza v2 по видео [Archakov Blog](https://www.youtube.com/watch?v=_UywBskWJ7Q&list=PL0FGkDGJQjJG9eI85xM1_iLIf6BcEdaNl)
 
 Проект создан с помощью [Create React App](https://github.com/facebook/create-react-app).
 
