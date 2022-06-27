@@ -1,8 +1,9 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-import { setCategoryId } from '../redux/slices/filterSlice';
+import { setCategoryId, setCurrentPage } from '../redux/slices/filterSlice';
 import { SearchContext } from '../App';
 import Categories from '../components/Categories';
 import Pagination from '../components/Pagination';
@@ -12,32 +13,37 @@ import Sort from '../components/Sort';
 
 function Home() {
     const dispatch = useDispatch();
-    const { categoryId, sort } = useSelector(state => state.filter);
+    const { categoryId, sort, currentPage } = useSelector(state => state.filter);
 
     const { searchValue } = React.useContext(SearchContext);
     const [items, setItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
 
     const onChangeCategory = id => {
         dispatch(setCategoryId(id));
     };
 
-    console.log(categoryId);
-
-    const sortBy = sort.sortProperty.replace('-', '');
-    const order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
-    const caregoryId = categoryId > 0 ? `&category=${categoryId}` : '';
-    const search = searchValue ? `&search=${searchValue}` : '';
+    const onChangePage = number => {
+        dispatch(setCurrentPage(number));
+    };
 
     useEffect(() => {
         setIsLoading(true);
-        fetch(`https://628df5dc368687f3e70d5ea7.mockapi.io/items?page=${currentPage}&limit=4${caregoryId}&sortBy=${sortBy}&order=${order}${search}`)
-            .then(res => res.json())
-            .then(arr => {
-                setItems(arr);
+
+        const sortBy = sort.sortProperty.replace('-', '');
+        const order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
+        const caregoryId = categoryId > 0 ? `&category=${categoryId}` : '';
+        const search = searchValue ? `&search=${searchValue}` : '';
+
+        axios
+            .get(
+                `https://628df5dc368687f3e70d5ea7.mockapi.io/items?page=${currentPage}&limit=4${caregoryId}&sortBy=${sortBy}&order=${order}${search}`
+            )
+            .then(res => {
+                setItems(res.data);
                 setIsLoading(false);
             });
+
         window.scrollTo(0, 0);
     }, [categoryId, sort.sortProperty, searchValue, currentPage]);
 
@@ -52,7 +58,7 @@ function Home() {
             </div>
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">{isLoading ? skeletons : pizzas}</div>
-            <Pagination onChangePage={number => setCurrentPage(number)} />
+            <Pagination currentPage={currentPage} onChangePage={onChangePage} />
         </div>
     );
 }
