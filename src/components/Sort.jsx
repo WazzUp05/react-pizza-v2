@@ -26,7 +26,7 @@ function Sort() {
     useEffect(() => {
         const handleClickOutside = event => {
             if (!event.path.includes(sortRef.current)) {
-                // setOpen(false);
+                setOpen(false);
                 console.log('Click out');
             }
         };
