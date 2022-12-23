@@ -13,7 +13,7 @@ import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Sort, { sortList } from '../components/Sort';
 
-function Home() {
+const Home: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const isSearch = useRef(false);
@@ -22,12 +22,12 @@ function Home() {
     const { categoryId, sort, currentPage, searchValue } = useSelector(selectFilter);
     const { items, status } = useSelector(selectPizzaData);
 
-    const onChangeCategory = id => {
-        dispatch(setCategoryId(id));
+    const onChangeCategory = (index: number) => {
+        dispatch(setCategoryId(index));
     };
 
-    const onChangePage = number => {
-        dispatch(setCurrentPage(number));
+    const onChangePage = (page: number) => {
+        dispatch(setCurrentPage(page));
     };
 
     const getPizzas = async () => {
@@ -37,6 +37,7 @@ function Home() {
         const search = searchValue ? `&search=${searchValue}` : '';
 
         dispatch(
+            //@ts-ignore
             fetchPizzas({
                 sortBy,
                 order,
@@ -90,7 +91,7 @@ function Home() {
         isSearch.current = false;
     }, [categoryId, sort.sortProperty, searchValue, currentPage]);
 
-    const pizzas = items.map(item => (
+    const pizzas = items.map((item: any) => (
         <Link key={item.id} to={`/pizza/${item.id}`}>
             <PizzaBlock {...item} />
         </Link>
@@ -100,14 +101,14 @@ function Home() {
     return (
         <div className="container">
             <div className="content__top">
-                <Categories value={categoryId} onClickCategory={i => onChangeCategory(i)} />
+                <Categories value={categoryId} onChangeCategory={(index: number) => onChangeCategory(index)} />
                 <Sort />
             </div>
             <h2 className="content__title">Все пиццы</h2>
             {status === 'error' ? (
                 <div className="content__error-info">
                     <h2>
-                        Произошла ошибка <icon>😕</icon>
+                        Произошла ошибка <span>😕</span>
                     </h2>
                     <p>Не удалось получить пиццы.</p>
                 </div>
@@ -118,6 +119,6 @@ function Home() {
             <Pagination currentPage={currentPage} onChangePage={onChangePage} />
         </div>
     );
-}
+};
 
 export default Home;

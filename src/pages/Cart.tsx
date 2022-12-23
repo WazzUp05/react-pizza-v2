@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom';
 import CartItem from '../components/CartItem';
 import CartEmpty from '../components/CartEmpty';
 
-function Cart() {
+const Cart: React.FC = () => {
     const dispatch = useDispatch();
     const { totalPrice, items } = useSelector(selectCart);
 
-    const countItems = items.reduce((acc, item) => {
+    const countItems = items.reduce((acc: number, item: any) => {
         return item.count + acc;
     }, 0);
 
@@ -71,7 +71,7 @@ function Cart() {
                     </div>
                 </div>
                 <div className="content__items">
-                    {items.map(item => (
+                    {items.map((item: any) => (
                         <CartItem key={item.id} {...item} />
                     ))}
                 </div>
@@ -105,6 +105,6 @@ function Cart() {
             </div>
         </div>
     );
-}
+};
 
 export default Cart;
