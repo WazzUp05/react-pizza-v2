@@ -1,31 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectSort, setSort } from '../redux/slices/filterSlice';
+import { selectSort, setSort, Sort, SortPropertyEnum } from '../redux/slices/filterSlice';
 
-type SortItem = {
+export type SortItem = {
     name: string;
-    sortProperty: string;
+    sortProperty: SortPropertyEnum;
 };
+
 type PopupClick = MouseEvent & {
     path: Node[];
 };
+
 export const sortList: SortItem[] = [
-    { name: 'популярности (DESC)', sortProperty: 'rating' },
-    { name: 'популярности (ASC)', sortProperty: '-rating' },
-    { name: 'цене (DESC)', sortProperty: 'price' },
-    { name: 'цене (ASC)', sortProperty: '-price' },
-    { name: 'алфавиту (DESC)', sortProperty: 'title' },
-    { name: 'алфавиту (ASC)', sortProperty: '-title' },
+    { name: 'популярности (DESC)', sortProperty: SortPropertyEnum.RATING_DESC },
+    { name: 'популярности (ASC)', sortProperty: SortPropertyEnum.RATING_ASC },
+    { name: 'цене (DESC)', sortProperty: SortPropertyEnum.PRICE_DESC },
+    { name: 'цене (ASC)', sortProperty: SortPropertyEnum.RATING_ASC },
+    { name: 'алфавиту (DESC)', sortProperty: SortPropertyEnum.TITLE_DESC },
+    { name: 'алфавиту (ASC)', sortProperty: SortPropertyEnum.RATING_ASC },
 ];
 
-function Sort() {
+const SortPopup: React.FC = () => {
     const dispatch = useDispatch();
     const sort = useSelector(selectSort);
     const sortRef = useRef<HTMLDivElement>(null);
 
     const [open, setOpen] = useState(false);
 
-    const onClickListItem = (obj: SortItem) => {
+    const onClickListItem = (obj: Sort) => {
         dispatch(setSort(obj));
         setOpen(false);
     };
@@ -33,7 +35,7 @@ function Sort() {
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             const _event = event as PopupClick;
-            if (sortRef.current && !_event.path.includes(sortRef.current)) {
+            if (sortRef.current && !_event.path?.includes(sortRef.current)) {
                 setOpen(false);
                 console.log('Click out');
             }
@@ -68,6 +70,6 @@ function Sort() {
             )}
         </div>
     );
-}
+};
 
-export default Sort;
+export default SortPopup;
