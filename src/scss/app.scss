@@ -198,6 +198,16 @@ body {
                         display: none;
                     }
                 }
+                &:disabled {
+                    border-color: #787878;
+                    opacity: 0.4;
+                    pointer-events: none;
+                    svg {
+                        path {
+                            fill: #787878;
+                        }
+                    }
+                }
             }
 
             b {
